@@ -180,6 +180,10 @@ class CrosswordCreator():
                     i, j = self.crossword.overlaps(var,neighbour)
                     if assignment[var][i] != assignment[neighbour][j]:
                         return False
+
+        if len(set(assignment.values())) != len(assignment):
+            return False
+
         return True
 
     def order_domain_values(self, var, assignment):
@@ -189,6 +193,8 @@ class CrosswordCreator():
         The first value in the list, for example, should be the one
         that rules out the fewest values among the neighbors of `var`.
         """
+        domain = self.domains[var]
+
         return self.domains[var]
         raise NotImplementedError
 
