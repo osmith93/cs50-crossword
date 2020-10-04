@@ -112,8 +112,8 @@ class CrosswordCreator():
         False if no revision was made.
         """
 
-        if self.crossword.overlaps(x,y):
-            i , j = self.crossword.overlaps(x,y)
+        if self.crossword.overlaps(x, y):
+            i, j = self.crossword.overlaps(x, y)
         else:
             return False
 
@@ -130,7 +130,6 @@ class CrosswordCreator():
                 revision = True
         return revision
 
-
     def ac3(self, arcs=None):
         """
         Update `self.domains` such that each variable is arc consistent.
@@ -140,7 +139,21 @@ class CrosswordCreator():
         Return True if arc consistency is enforced and no domains are empty;
         return False if one or more domains end up empty.
         """
-        raise NotImplementedError
+        if arcs == None:
+            queue = [(x, y) for x in self.crossword.variables for y in self.crossword.neighbors(x)]
+        else:
+            queue = arcs
+
+        while queue:
+            x, y = queue.pop(0)
+            if self.revise(x, y):
+                if not self.domains[x]:
+                    return False
+                for z in self.crossword.neighbors(x):
+                    if z != y:
+                        queue.append((z, x))
+        return True
+
 
     def assignment_complete(self, assignment):
         """
@@ -188,7 +201,6 @@ class CrosswordCreator():
 
 
 def main():
-
     # Check usage
     if len(sys.argv) not in [3, 4]:
         sys.exit("Usage: python generate.py structure words [output]")
